@@ -47,6 +47,59 @@ class LinkDAO extends DAO
     }
 
     /**
+     * Return a list of all links, sorted by date (most recent first).
+     *
+     */
+    public function getPagination() {
+        $nbLinkMax= 4;
+        $nbLink = "
+            SELECT COUNT(lien_id)
+            AS total 
+            FROM tl_liens
+            ORDER BY lien_id DESC
+        ";
+        $result = $this->getDb()->fetchAssoc($sql);
+        $total=$result['total'];
+        $nbAffiche = ceil($total/$nbLinkMax);
+
+        if(isset($_GET['page'])){
+            $currentPage=intval($_GET['page']);
+
+            if($currentPage>$nbAffiche){
+                $currentPage=$nbAffiche;
+            }
+        }else{
+            $currentPage=1;
+        }
+
+        $premiereEntree=($currentPage-1)*$nbAffiche;
+
+        $retour_lien= "
+            SELECT * FROM tl_liens 
+            ORDER BY id DESC LIMIT '.$premiereEntree.', '.$nbAffiche.' ";
+
+        $donnees_lien= $this->getDb()->fetchAssoc($retour_lien);
+        $allLinks = array();
+        foreach ($donnees_lien as $row) {
+            $linkId          = $row['lien_id'];
+            $linkTitre          = $row['lien_titre'];
+            $linkDesc          = $row['lien_desc'];
+        }
+
+        echo '<p align="center">Page : ';
+        for($i=1; $i<=$nbAffiche; $i++){
+            if($i==$currentPage){
+                echo ' [ '.$i.' ] ';
+            }else{
+                echo ' <a href="admin.php?page='.$i.'">'.$i.'</a> ';
+            }
+        }
+        echo '</p>';
+
+        return $allLinks;
+    }
+
+    /**
      * Returns a link matching the supplied id.
      *
      * @param integer $id The link id.

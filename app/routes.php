@@ -44,3 +44,6 @@ $app->post('/api/link', "Watson\Controller\ApiController::addLinkAction")->bind(
 
 // API : remove a link
 $app->delete('/api/link/{id}', "Watson\Controller\ApiController::deleteLinkAction")->bind('api_link_delete');
+
+// Admin zone -> pagination
+$app->get('/admin', "Watson\Controller\AdminController::getPaginationAction")->bind('pagination');

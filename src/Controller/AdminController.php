@@ -26,6 +26,18 @@ class AdminController {
     }
 
     /**
+     * Pagination on admin page controller.
+     *
+     * @param Application $app Silex application
+     */
+    public function getPaginationAction(Application $app) {
+        $links = $app['dao.link']->getPagination();
+        return $app['twig']->render('admin.html.twig', array(
+            'links' => $links,
+            'users' => $users));
+    }
+
+    /**
      * Add link controller.
      *
      * @param Request $request Incoming request
@@ -149,6 +161,18 @@ class AdminController {
         
         // Redirect to admin home page
         return $app->redirect($app['url_generator']->generate('admin'));
+    }
+
+    /**
+     * Count all link controller.
+     *
+     * @param Application $app Silex application
+     */
+    public function countLinkAction(Application $app) {
+        $links = $app['dao.link']->countAll();
+        return $app['twig']->render('admin.html.twig', array(
+            'links' => $links,
+            'users' => $users));
     }
 
     /**
